@@ -4,50 +4,72 @@ on: push
 
 jobs:
   # -----------------------------------------------------------------
-  # 1. JOB DE CONSTRUCCIÓN (BUILD) - CÓDIGO NUEVO
+  # 1. JOB DE CONSTRUCCIÓN (BUILD) - (SE MANTIENE)
   # -----------------------------------------------------------------
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar repositorio
-        uses: actions/checkout@v2 # 1) Descargar archivos
-      
+        uses: actions/checkout@v2
       - name: Instalar JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: "11"
-          distribution: "adopt" # 2) Instalar JDK
-          
+          distribution: "adopt"
       - name: Construir con Maven
-        run: mvn clean package -DskipTests # 3) Compilar y empaquetar
-        
+        run: mvn clean package -DskipTests
       - name: Guardar paquete generado para el trabajo de despliegue
         uses: actions/upload-artifact@v4
         with:
           name: moviecards-java
-          path: "${{ github.workspace }}/target/*.jar" # 4) Subir el artefacto a GitHub Actions
+          path: "${{ github.workspace }}/target/*.jar"
           
   # -----------------------------------------------------------------
-  # 2. JOBS RESTANTES (SE MANTIENEN)
+  # 2. JOB DE PRUEBAS (TEST) - CÓDIGO NUEVO (REEMPLAZA EL ANTERIOR)
   # -----------------------------------------------------------------
   test:
-    needs: build # Se ejecuta SÓLO si 'build' es exitoso
+    needs: build # Se asegura que la compilación haya terminado con éxito
     runs-on: ubuntu-latest
     steps:
-      - name: pruebas
-        run: echo "pruebas"
+      - name: Descargar repositorio
+        uses: actions/checkout@v2 # 1) Descargar archivos fuente (de nuevo, en este runner)
         
+      - name: Instalar JDK 11
+        uses: actions/setup-java@v2 # 2) Instalar JDK
+        with:
+          java-version: "11"
+          distribution: "adopt"
+          
+      - name: Instalar Chrome y ChromeDriver para pruebas end to end
+        run: | # 3) Instalación del navegador y su controlador (End-to-End)
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb
+          sudo apt --fix-broken install -y
+          CHROMEDRIVER_VERSION=$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          curl -L -o chromedriver.zip https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip
+          unzip chromedriver.zip
+          chmod +x chromedriver
+          sudo mv chromedriver /usr/local/bin/
+
+      - name: Ejecutar la aplicación para pruebas end to end
+        run: mvn spring-boot:run & sleep 60 # 4) Iniciar la aplicación en segundo plano (el &) y esperar 60s
+        
+      - name: Ejecutar las pruebas unitarias, de integración y end to end
+        run: mvn clean verify # 5) Ejecutar todas las pruebas. 'verify' ejecuta las pruebas de integración y end-to-end.
+
+  # -----------------------------------------------------------------
+  # 3. JOBS RESTANTES (QA y DEPLOY) - (SE MANTIENEN)
+  # -----------------------------------------------------------------
   qa:
-    needs: test # Se ejecuta SÓLO si 'test' es exitoso
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: calidad
         run: echo "calidad"
         
   deploy:
-    needs: qa # Se ejecuta SÓLO si 'qa' es exitoso
+    needs: qa
     runs-on: ubuntu-latest
     steps:
       - name: despliegue
-        # Aquí deberías añadir la acción actions/download-artifact para obtener el JAR
         run: echo "despliegue"
