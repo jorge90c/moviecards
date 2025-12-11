@@ -1,0 +1,43 @@
+#################################
+# 1. DEPENDENCIAS Y ARTEFACTOS GENERADOS
+#################################
+# Node
+/node_modules
+
+# Python
+/__pycache__
+*.pyc
+/venv
+/env
+
+# .NET
+/bin
+/obj
+
+# Compilaciones generales (como Maven o builds temporales)
+/target 
+
+# Archivos de logs
+*.log
+
+#################################
+# 2. CONFIGURACIÓN DE ENTORNO Y SECRETO
+#################################
+.env
+.env.*
+
+#################################
+# 3. ENTORNO DE DESARROLLO (IDEs)
+#################################
+### VS Code ###
+.vscode/
+
+### IntelliJ IDEA / JetBrains ###
+.idea/
+
+#################################
+# 4. SISTEMA OPERATIVO
+#################################
+.DS_Store
+Thumbs.db
+*~
