@@ -101,8 +101,8 @@ jobs:
       - name: Aprobación manual
         uses: trstringer/manual-approval@v1
         with:
-        secret: ${{ secrets.TOKEN }}
-        approvers: jorge90c
+          secret: ${{ secrets.TOKEN }}
+          approvers: jorge90c
 
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
