@@ -85,27 +85,29 @@ jobs:
             -Dsonar.login=admin \
             -Dsonar.password=admin123456
 
+# ... código anterior (build, test, qa) ...
+
   # -----------------------------------------------------------------
-  # 4. JOB DE DESPLIEGUE (DEPLOY) - IMPLEMENTACIÓN FINAL
+  # 4. JOB DE DESPLIEGUE (DEPLOY) - ¡CORREGIDO AQUÍ!
   # -----------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
-    needs: qa # Depende del éxito del job 'qa'
-    if: github.ref=='refs/heads/main' # Condición para desplegar solo si es la rama master
+    needs: qa
+    if: github.ref=='refs/heads/master'
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4 # <--- ¡CAMBIADO DE V3 A V4!
         with:
-          name: moviecards-java # Coincide con el nombre subido en el job 'build'
+          name: moviecards-java
           
-      - name: Deploy to Azure Web App Jorge Caceres
+      - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'moviecards-caceres'
+          app-name: 'moviecards-hilera'
           slot-name: 'Production'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3DEA6D721FBD4454803CEC8617DAEDB7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D6ED3BD417664637ADFE2D648524B336 }}
