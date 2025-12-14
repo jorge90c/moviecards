@@ -1,8 +1,9 @@
 package com.lauracercas.moviecards.controller;
 
+import com.lauracercas.moviecards.client.MovieClient;
 import com.lauracercas.moviecards.model.Actor;
 import com.lauracercas.moviecards.model.Movie;
-import com.lauracercas.moviecards.service.movie.MovieService;
+//import com.lauracercas.moviecards.service.movie.MovieService;
 import com.lauracercas.moviecards.util.Messages;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +24,16 @@ import java.util.List;
 @Controller
 public class MovieController {
 
-    private final MovieService movieService;
+    //private final MovieService movieService;
+    private final MovieClient movieClient;
 
-    public MovieController(MovieService movieService) {
-        this.movieService = movieService;
+    public MovieController(MovieClient movieClient) {
+        this.movieClient = movieClient;
     }
 
     @GetMapping("movies")
     public String getMoviesList(Model model) {
-        model.addAttribute("movies", movieService.getAllMovies());
+        model.addAttribute("movies", movieClient.getAllMovies());
         return "movies/list";
     }
 
@@ -47,21 +49,21 @@ public class MovieController {
         if (result.hasErrors()) {
             return "movies/form";
         }
-        Movie movieSaved = movieService.save(movie);
-        if (movieSaved.getId() != null) {
+        movieClient.save(movie);
+        if (movie.getId() != null) {
             model.addAttribute("message", Messages.UPDATED_MOVIE_SUCCESS);
         } else {
             model.addAttribute("message", Messages.SAVED_MOVIE_SUCCESS);
         }
 
-        model.addAttribute("movie", movieSaved);
+        model.addAttribute("movie", movie);
         model.addAttribute("title", Messages.EDIT_MOVIE_TITLE);
         return "movies/form";
     }
 
     @GetMapping("editMovie/{movieId}")
     public String editMovie(@PathVariable Integer movieId, Model model) {
-        Movie movie = movieService.getMovieById(movieId);
+        Movie movie = movieClient.getMovieById(movieId);
         List<Actor> actors = movie.getActors();
         model.addAttribute("movie", movie);
         model.addAttribute("actors", actors);

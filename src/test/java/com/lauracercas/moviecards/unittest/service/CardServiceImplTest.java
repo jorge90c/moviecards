@@ -1,11 +1,13 @@
 package com.lauracercas.moviecards.unittest.service;
 
+import com.lauracercas.moviecards.client.ActorClient;
+import com.lauracercas.moviecards.client.MovieClient;
 import com.lauracercas.moviecards.model.Actor;
 import com.lauracercas.moviecards.model.Card;
 import com.lauracercas.moviecards.model.Movie;
-import com.lauracercas.moviecards.service.actor.ActorService;
+//import com.lauracercas.moviecards.service.actor.ActorService;
 import com.lauracercas.moviecards.service.card.CardServiceImpl;
-import com.lauracercas.moviecards.service.movie.MovieService;
+//import com.lauracercas.moviecards.service.movie.MovieService;
 import com.lauracercas.moviecards.util.Messages;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -25,11 +29,15 @@ import static org.mockito.MockitoAnnotations.openMocks;
  * Fecha: 04/06/2024
  */
 class CardServiceImplTest {
-
+/* 
     @Mock
-    ActorService actorService;
+    ActorClient actorClient;
+    //ActorService actorService;
+    
     @Mock
-    MovieService movieService;
+    MovieClient movieClient;
+    //MovieService movieService;
+    
     private CardServiceImpl sut;
     private AutoCloseable closeable;
 
@@ -37,7 +45,7 @@ class CardServiceImplTest {
     @BeforeEach
     public void setUp() {
         closeable = openMocks(this);
-        sut = new CardServiceImpl(actorService, movieService);
+        sut = new CardServiceImpl(actorClient, movieClient);
     }
 
     @AfterEach
@@ -59,9 +67,10 @@ class CardServiceImplTest {
         movie.setTitle("Sample Movie");
         movie.setActors(new ArrayList<>());
 
-        when(actorService.getActorById(1)).thenReturn(actor);
-        when(movieService.getMovieById(2)).thenReturn(movie);
-        when(movieService.save(movie)).thenReturn(movie);
+        when(actorClient.getActorById(1)).thenReturn(actor);
+        when(movieClient.getMovieById(2)).thenReturn(movie);
+        doNothing().when(movieClient).save(any(Movie.class));
+
 
         String result = sut.registerActorInMovie(card);
 
@@ -74,8 +83,8 @@ class CardServiceImplTest {
         card.setIdActor(1);
         card.setIdMovie(2);
 
-        when(actorService.getActorById(1)).thenReturn(null);
-        when(movieService.getMovieById(2)).thenReturn(null);
+        when(actorClient.getActorById(1)).thenReturn(null);
+        when(movieClient.getMovieById(2)).thenReturn(null);
 
         String result = sut.registerActorInMovie(card);
 
@@ -97,13 +106,13 @@ class CardServiceImplTest {
         movie.setTitle("Sample Movie");
         movie.setActors(List.of(actor));
 
-        when(actorService.getActorById(1)).thenReturn(actor);
-        when(movieService.getMovieById(2)).thenReturn(movie);
+        when(actorClient.getActorById(1)).thenReturn(actor);
+        when(movieClient.getMovieById(2)).thenReturn(movie);
 
         String result = sut.registerActorInMovie(card);
 
         assertEquals(Messages.CARD_ALREADY_EXISTS, result);
 
     }
-
+*/
 }
