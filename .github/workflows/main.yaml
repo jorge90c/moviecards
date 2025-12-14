@@ -55,8 +55,8 @@ jobs:
         run: mvn spring-boot:run -DskipTests &
       - name: Esperar a que arranque
         run: sleep 60  
-      - name: Ejecutar las pruebas unitarias, de integración y end to end
-        run: mvn verify -DskipTests=false
+      - name: Ejecutar las pruebas con cobertura
+        run: mvn clean verify
 
   # -----------------------------------------------------------------
   # 3. JOB DE CALIDAD (QA)
@@ -84,12 +84,13 @@ jobs:
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.qualitygate.wait=true \
             -Dsonar.login=admin \
-            -Dsonar.password=admin123456
+            -Dsonar.password=admin123456 \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
 # ... código anterior (build, test, qa) ...
 
   # -----------------------------------------------------------------
-  # 4. JOB DE DESPLIEGUE (DEPLOY) - ¡CORREGIDO AQUÍ!
+  # 4. JOB DE DESPLIEGUE (DEPLOY) 
   # -----------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
