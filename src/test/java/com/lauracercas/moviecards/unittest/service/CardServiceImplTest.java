@@ -29,7 +29,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
  * Fecha: 04/06/2024
  */
 class CardServiceImplTest {
-/* 
+ 
     @Mock
     ActorClient actorClient;
     //ActorService actorService;
@@ -114,5 +114,5 @@ class CardServiceImplTest {
         assertEquals(Messages.CARD_ALREADY_EXISTS, result);
 
     }
-*/
+
 }

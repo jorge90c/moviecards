@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
  * Fecha: 04/06/2024
  */
 class CardControllerTest {
-/* 
+
     private CardController controller;
     private AutoCloseable closeable;
 
@@ -101,5 +101,5 @@ class CardControllerTest {
         verify(model).addAttribute("card", new Card());
     }
 
-*/
+
 }

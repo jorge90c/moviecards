@@ -28,7 +28,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
  */
 class ActorControllerTest {
     private ActorController controller;
-/*     
+   
     @Mock
     private ActorClient actorClientMock;
     //private ActorService actorServiceMock;
@@ -135,5 +135,5 @@ class ActorControllerTest {
         verify(model).addAttribute("title", Messages.EDIT_ACTOR_TITLE);
     }
 
-*/
+
 }

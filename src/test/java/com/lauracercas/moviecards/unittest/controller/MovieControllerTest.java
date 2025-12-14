@@ -27,7 +27,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
  * Fecha: 04/06/2024
  */
 class MovieControllerTest {
-/* 
+ 
     private MovieController controller;
     private AutoCloseable closeable;
 
@@ -138,5 +138,5 @@ class MovieControllerTest {
         verify(model).addAttribute("actors", actors);
         verify(model).addAttribute("title", Messages.EDIT_MOVIE_TITLE);
     }
-*/
+
 }
