@@ -1,11 +1,13 @@
 package com.lauracercas.moviecards.controller;
 
+import com.lauracercas.moviecards.client.ActorClient;
+import com.lauracercas.moviecards.client.MovieClient;
 import com.lauracercas.moviecards.model.Actor;
 import com.lauracercas.moviecards.model.Card;
 import com.lauracercas.moviecards.model.Movie;
-import com.lauracercas.moviecards.service.actor.ActorService;
+//import com.lauracercas.moviecards.service.actor.ActorService;
 import com.lauracercas.moviecards.service.card.CardService;
-import com.lauracercas.moviecards.service.movie.MovieService;
+//import com.lauracercas.moviecards.service.movie.MovieService;
 import com.lauracercas.moviecards.util.Messages;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,15 +25,15 @@ import java.util.List;
  */
 @Controller
 public class CardController {
-
-
-    private final MovieService movieService;
-    private final ActorService actorService;
+    //private final MovieService movieService;
+    private final ActorClient actorClient;
+    private final MovieClient movieClient;
+    //private final ActorService actorService;
     private final CardService cardService;
 
-    public CardController(MovieService movieService, ActorService actorService, CardService cardService) {
-        this.movieService = movieService;
-        this.actorService = actorService;
+    public CardController(MovieClient movieClient, ActorClient actorClient, CardService cardService) {
+        this.movieClient = movieClient;
+        this.actorClient = actorClient;
         this.cardService = cardService;
     }
 
@@ -43,8 +45,8 @@ public class CardController {
     }
 
     private void prepareCardInfoForm(Model model) {
-        List<Actor> actors = actorService.getAllActors();
-        List<Movie> movies = movieService.getAllMovies();
+        List<Actor> actors = actorClient.getAllActors();
+        List<Movie> movies = movieClient.getAllMovies();
 
         model.addAttribute("actors", actors);
         model.addAttribute("movies", movies);
