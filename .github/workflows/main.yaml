@@ -57,6 +57,11 @@ jobs:
         run: sleep 60  
       - name: Ejecutar las pruebas con cobertura
         run: mvn clean verify
+      - name: Guardar reporte de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/jacoco.xml
 
   # -----------------------------------------------------------------
   # 3. JOB DE CALIDAD (QA)
@@ -77,7 +82,12 @@ jobs:
           
       - name: Construir con Maven
         run: mvn clean package -DskipTests
-        
+
+      - name: Descargar reporte de cobertura
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-report
+
       - name: Revisar la calidad con Sonarqube
         run: |
           mvn sonar:sonar \
