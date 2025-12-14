@@ -87,6 +87,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: jacoco-report
+          path: ./jacoco-report
 
       - name: Revisar la calidad con Sonarqube
         run: |
@@ -95,7 +96,8 @@ jobs:
             -Dsonar.qualitygate.wait=true \
             -Dsonar.login=admin \
             -Dsonar.password=admin123456 \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-report/jacoco.xml
+
 
 # ... código anterior (build, test, qa) ...
 
