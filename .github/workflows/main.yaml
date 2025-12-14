@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Instalar JDK 11
-        uses: actions/setup-java@v2 # Sintaxis de acción corregida
+        uses: actions/setup-java@v2 
         with:
           java-version: "11"
           distribution: "adopt"
@@ -51,11 +51,17 @@ jobs:
           chmod +x chromedriver
           sudo mv chromedriver /usr/local/bin/
 
-      - name: Ejecutar la aplicación para pruebas end to end
-        run: mvn spring-boot:run & sleep 60
-        
-      - name: Ejecutar las pruebas unitarias, de integración y end to end
+      - name: Ejecutar la aplicación en 2do plano
+        run: mvn spring-boot:run -DskipTests &
+      - name: Esperar a que arranque
+        run: sleep 60  
+      - name: Ejecutar las pruebas con cobertura
         run: mvn clean verify
+      - name: Guardar reporte de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/jacoco.xml
 
   # -----------------------------------------------------------------
   # 3. JOB DE CALIDAD (QA)
@@ -76,19 +82,27 @@ jobs:
           
       - name: Construir con Maven
         run: mvn clean package -DskipTests
-        
+
+      - name: Descargar reporte de cobertura
+        uses: actions/download-artifact@v4
+        with:
+          name: jacoco-report
+          path: ./jacoco-report
+
       - name: Revisar la calidad con Sonarqube
         run: |
           mvn sonar:sonar \
             -Dsonar.host.url=http://localhost:9000 \
             -Dsonar.qualitygate.wait=true \
             -Dsonar.login=admin \
-            -Dsonar.password=admin123456
+            -Dsonar.password=admin123456 \
+            -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-report/jacoco.xml
+
 
 # ... código anterior (build, test, qa) ...
 
   # -----------------------------------------------------------------
-  # 4. JOB DE DESPLIEGUE (DEPLOY) - ¡CORREGIDO AQUÍ!
+  # 4. JOB DE DESPLIEGUE (DEPLOY) 
   # -----------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
