@@ -98,15 +98,36 @@ jobs:
             -Dsonar.password=admin123456 \
             -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-report/jacoco.xml
 
+  # -----------------------------------------------------------------
+  # 4. JOB DE PRE-PRODUCCIÓN (STAGE)
+  # -----------------------------------------------------------------
+  stage:
+    runs-on: ubuntu-latest
+    needs: qa
+    environment:
+      name: 'Pre-Production'
+    steps: 
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: moviecards-java
+          
+      - name: Deploy to Azure Web App (Pre)
+        id: deploy-to-webapp-pre
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'moviecards-pre-caceres'
+          slot-name: 'Production'
+          package: '*.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E751D969B7AA4FA78E891851CDFCBCC2 }}
 
-# ... código anterior (build, test, qa) ...
 
   # -----------------------------------------------------------------
-  # 4. JOB DE DESPLIEGUE (DEPLOY) 
+  # 5. JOB DE DESPLIEGUE (DEPLOY) 
   # -----------------------------------------------------------------
   deploy:
     runs-on: ubuntu-latest
-    needs: qa
+    needs: stage
     if: github.ref=='refs/heads/main'
     environment:
       name: 'Production'
