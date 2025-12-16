@@ -24,6 +24,9 @@ import java.util.List;
 @Controller
 public class MovieController {
 
+    public static final String ATTR_MOVIE = "movie";
+    public static final String ATTR_TITLE = "title";
+
     //private final MovieService movieService;
     private final MovieClient movieClient;
 
@@ -39,8 +42,8 @@ public class MovieController {
 
     @GetMapping("movies/new")
     public String newMovie(Model model) {
-        model.addAttribute("movie", new Movie());
-        model.addAttribute("title", Messages.NEW_MOVIE_TITLE);
+        model.addAttribute(ATTR_MOVIE, new Movie());
+        model.addAttribute(ATTR_TITLE, Messages.NEW_MOVIE_TITLE);
         return "movies/form";
     }
 
@@ -56,8 +59,8 @@ public class MovieController {
             model.addAttribute("message", Messages.SAVED_MOVIE_SUCCESS);
         }
 
-        model.addAttribute("movie", movie);
-        model.addAttribute("title", Messages.EDIT_MOVIE_TITLE);
+        model.addAttribute(ATTR_MOVIE, movie);
+        model.addAttribute(ATTR_TITLE, Messages.EDIT_MOVIE_TITLE);
         return "movies/form";
     }
 
@@ -65,10 +68,10 @@ public class MovieController {
     public String editMovie(@PathVariable Integer movieId, Model model) {
         Movie movie = movieClient.getMovieById(movieId);
         List<Actor> actors = movie.getActors();
-        model.addAttribute("movie", movie);
+        model.addAttribute(ATTR_MOVIE, movie);
         model.addAttribute("actors", actors);
 
-        model.addAttribute("title", Messages.EDIT_MOVIE_TITLE);
+        model.addAttribute(ATTR_TITLE, Messages.EDIT_MOVIE_TITLE);
 
         return "movies/form";
     }
