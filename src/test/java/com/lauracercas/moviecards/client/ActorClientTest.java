@@ -24,6 +24,7 @@ class ActorClientTest {
         actor.setName("Jorge");
         actor.setCountry("Peru");
         actor.setBirthDate(new Date());
+        actor.setDeadDate(new Date());
 
         List<Actor> mockActors = List.of(actor);
 
@@ -50,6 +51,8 @@ class ActorClientTest {
         Actor actor = new Actor();
         actor.setName("Jorge");
         actor.setCountry("Peru");
+        actor.setBirthDate(new Date());
+        actor.setDeadDate(new Date());
 
         when(restTemplate.getForObject(
                 "https://moviecards-service-caceres.azurewebsites.net/actors/1",
@@ -71,6 +74,8 @@ class ActorClientTest {
         Actor actor = new Actor();
         actor.setName("Jorge");
         actor.setCountry("Peru");
+        actor.setBirthDate(new Date());
+        actor.setDeadDate(new Date());
 
         client.save(actor);
 
